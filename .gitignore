@@ -1,0 +1,6 @@
+# CLion project files
+.idea/
+cmake-build-*/
+
+# Subproject for testing
+Sandbox/
