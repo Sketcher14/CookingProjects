@@ -2,15 +2,14 @@
 
 #include "algo/sort.h"
 
-using namespace std;
-
 int main()
 {
-    vector<int> nums {5, 4, 3, 2, 1};
+    std::vector<int> nums {5, 4, 3, 2, 1};
 
     algo::stl_sort(nums);
 
-    for (int num : nums)
-        cout << num << ' ';
+    for (const int num : nums)
+        std::cout << num << ' ';
+
     return 0;
 }

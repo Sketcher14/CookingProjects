@@ -37,29 +37,79 @@ namespace algo
 
         void merge_sort(std::vector<int>& nums, int left, int right)
         {
-            // iterative
             if (left < right)
             {
+                const int mid = left + (right - left) / 2;
+                merge_sort(nums, left, mid);
+                merge_sort(nums,mid + 1, right);
 
+                std::vector<int> sorted;
+                int i = left, j = mid + 1;
+                while (i <= mid && j <= right)
+                {
+                    if (nums[i] < nums[j])
+                        sorted.push_back(nums[i++]);
+                    else
+                        sorted.push_back(nums[j++]);
+                }
+
+                while (i <= mid)
+                    sorted.push_back(nums[i++]);
+
+                while (j <= right)
+                    sorted.push_back(nums[j++]);
+
+                for (size_t l = 0; l < sorted.size(); ++l)
+                    nums[left + l] = sorted[l];
             }
         }
 
         void bubble_sort(std::vector<int>& nums)
         {
-            int n = nums.size();
-            for (int i = 0; i < n - 1; i++)
+            const int n = nums.size();
+            for (int i = 0; i < n - 1; ++i)
             {
                 bool swapped = false;
-                for (int j = 0; j < n - i - 1; j++)
+                for (int j = 0; j < n - 1 - i; ++j)
                 {
-                    if (nums[j] > nums[j + 1])
+                    if (nums[j + 1] < nums[j])
                     {
                         std::swap(nums[j], nums[j + 1]);
                         swapped = true;
                     }
                 }
+
                 if (!swapped)
                     break;
+            }
+        }
+
+        void insertion_sort(std::vector<int>& nums)
+        {
+            const int n = nums.size();
+            for (int i = 1; i < n; ++i)
+            {
+                int j = i;
+                while (j >= 1 && nums[j] < nums[j - 1])
+                {
+                    std::swap(nums[j], nums[j - 1]);
+                    j--;
+                }
+            }
+        }
+
+        void selection_sort(std::vector<int>& nums)
+        {
+            const int n = nums.size();
+            for (int i = 0; i < n - 1; ++i)
+            {
+                int min_index = i;
+                for (int j = i + 1; j < n; ++j)
+                {
+                    if (nums[j] < nums[min_index])
+                        min_index = j;
+                }
+                std::swap(nums[i], nums[min_index]);
             }
         }
     }
@@ -82,5 +132,15 @@ namespace algo
     void bubble_sort(std::vector<int>& nums)
     {
         local::bubble_sort(nums);
+    }
+
+    void insertion_sort(std::vector<int>& nums)
+    {
+        local::insertion_sort(nums);
+    }
+
+    void selection_sort(std::vector<int>& nums)
+    {
+        local::selection_sort(nums);
     }
 }

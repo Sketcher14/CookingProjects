@@ -112,12 +112,42 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+// Instantiate tests for Merge sort
+INSTANTIATE_TEST_SUITE_P(
+    Merge_Sort_Tests,
+    SortAlgorithmTest,
+    ::testing::Combine(
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::merge_sort)),
+        ::testing::ValuesIn(GetTestCases())
+    )
+);
+
 // Instantiate tests for Bubble sort
 INSTANTIATE_TEST_SUITE_P(
     Bubble_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
         ::testing::Values(std::function<void(std::vector<int>&)>(algo::bubble_sort)),
+        ::testing::ValuesIn(GetTestCases())
+    )
+);
+
+// Instantiate tests for Insertion sort
+INSTANTIATE_TEST_SUITE_P(
+    Insertion_Sort_Tests,
+    SortAlgorithmTest,
+    ::testing::Combine(
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::insertion_sort)),
+        ::testing::ValuesIn(GetTestCases())
+    )
+);
+
+// Instantiate tests for Selection sort
+INSTANTIATE_TEST_SUITE_P(
+    Selection_Sort_Tests,
+    SortAlgorithmTest,
+    ::testing::Combine(
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::selection_sort)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
