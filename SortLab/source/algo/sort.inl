@@ -1,12 +1,13 @@
-#include "sort.h"
+#pragma once
 
 namespace algo
 {
     namespace local
     {
-        int quick_sort_partition(std::vector<int>& nums, int left, int right)
+        template<class T>
+        int quick_sort_partition(std::vector<T>& nums, int left, int right)
         {
-            int pivot = nums[left + (right - left) / 2];
+            T pivot = nums[left + (right - left) / 2];
 
             int i = left, j = right;
             while (true)
@@ -25,7 +26,8 @@ namespace algo
             return j;
         }
 
-        void quick_sort(std::vector<int>& nums, int left, int right)
+        template<class T>
+        void quick_sort(std::vector<T>& nums, int left, int right)
         {
             if (left < right)
             {
@@ -35,15 +37,16 @@ namespace algo
             }
         }
 
-        void merge_sort(std::vector<int>& nums, int left, int right)
+        template<class T>
+        void merge_sort(std::vector<T>& nums, int left, int right)
         {
             if (left < right)
             {
-                const int mid = left + (right - left) / 2;
+                const T mid = left + (right - left) / 2;
                 merge_sort(nums, left, mid);
-                merge_sort(nums,mid + 1, right);
+                merge_sort(nums, mid + 1, right);
 
-                std::vector<int> sorted;
+                std::vector<T> sorted;
                 int i = left, j = mid + 1;
                 while (i <= mid && j <= right)
                 {
@@ -64,7 +67,8 @@ namespace algo
             }
         }
 
-        void bubble_sort(std::vector<int>& nums)
+        template<class T>
+        void bubble_sort(std::vector<T>& nums)
         {
             const int n = nums.size();
             for (int i = 0; i < n - 1; ++i)
@@ -84,7 +88,8 @@ namespace algo
             }
         }
 
-        void insertion_sort(std::vector<int>& nums)
+        template<class T>
+        void insertion_sort(std::vector<T>& nums)
         {
             const int n = nums.size();
             for (int i = 1; i < n; ++i)
@@ -98,7 +103,8 @@ namespace algo
             }
         }
 
-        void selection_sort(std::vector<int>& nums)
+        template<class T>
+        void selection_sort(std::vector<T>& nums)
         {
             const int n = nums.size();
             for (int i = 0; i < n - 1; ++i)
@@ -114,32 +120,38 @@ namespace algo
         }
     }
 
-    void stl_sort(std::vector<int>& nums)
+    template<class T>
+    void stl_sort(std::vector<T>& nums)
     {
         std::sort(nums.begin(), nums.end());
     }
 
-    void quick_sort(std::vector<int>& nums)
+    template<class T>
+    void quick_sort(std::vector<T>& nums)
     {
         local::quick_sort(nums, 0, nums.size() - 1);
     }
 
-    void merge_sort(std::vector<int>& nums)
+    template<class T>
+    void merge_sort(std::vector<T>& nums)
     {
         local::merge_sort(nums, 0, nums.size() - 1);
     }
 
-    void bubble_sort(std::vector<int>& nums)
+    template<class T>
+    void bubble_sort(std::vector<T>& nums)
     {
         local::bubble_sort(nums);
     }
 
-    void insertion_sort(std::vector<int>& nums)
+    template<class T>
+    void insertion_sort(std::vector<T>& nums)
     {
         local::insertion_sort(nums);
     }
 
-    void selection_sort(std::vector<int>& nums)
+    template<class T>
+    void selection_sort(std::vector<T>& nums)
     {
         local::selection_sort(nums);
     }

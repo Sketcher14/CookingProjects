@@ -97,7 +97,7 @@ INSTANTIATE_TEST_SUITE_P(
     STL_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::stl_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::stl_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
@@ -107,7 +107,7 @@ INSTANTIATE_TEST_SUITE_P(
     Quick_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::quick_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::quick_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
@@ -117,7 +117,7 @@ INSTANTIATE_TEST_SUITE_P(
     Merge_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::merge_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::merge_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
@@ -127,7 +127,7 @@ INSTANTIATE_TEST_SUITE_P(
     Bubble_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::bubble_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::bubble_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
@@ -137,7 +137,7 @@ INSTANTIATE_TEST_SUITE_P(
     Insertion_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::insertion_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::insertion_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
@@ -147,7 +147,7 @@ INSTANTIATE_TEST_SUITE_P(
     Selection_Sort_Tests,
     SortAlgorithmTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::selection_sort)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(algo::selection_sort<int>)),
         ::testing::ValuesIn(GetTestCases())
     )
 );
