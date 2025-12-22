@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "algo/sort.h"
+#include "print.h"
 
 int main()
 {
@@ -11,11 +12,12 @@ int main()
     algo::stl_sort(nums1);
 
     for (const int num : nums)
-        std::cout << num << ' ';
-    std::cout << '\n';
+        print("{} ", num);
+    print("\n");
 
     for (const float num : nums1)
-        std::cout << num << ' ';
-    std::cout << '\n';
+        print("{} ", num);
+    print("\n");
+
     return 0;
 }
