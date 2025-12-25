@@ -4,23 +4,23 @@
 
 namespace algo
 {
-    template<class T>
-    void stl_sort(std::vector<T>& range);
+    template<class RangeType>
+    void stl_sort(RangeType&& range);
 
-    template<class T>
-    void quick_sort(std::vector<T>& nums);
+    template<class RangeType>
+    void quick_sort(RangeType&& range);
 
-    template<class T>
-    void merge_sort(std::vector<T>& nums);
+    template<class RangeType>
+    void merge_sort(RangeType&& range);
 
-    template<class T>
-    void bubble_sort(std::vector<T>& nums);
+    template<class RangeType>
+    void bubble_sort(RangeType&& range);
 
-    template<class T>
-    void insertion_sort(std::vector<T>& nums);
+    template<class RangeType>
+    void insertion_sort(RangeType&& range);
 
-    template<class T>
-    void selection_sort(std::vector<T>& nums);
+    template<class RangeType>
+    void selection_sort(RangeType&& range);
 }
 
 #include "sort.inl"

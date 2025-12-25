@@ -3,8 +3,7 @@
 
 #include "algo/sort.h"
 
-// Test data structure
-struct SortTestCase
+struct AlgoSortTestCase
 {
     std::vector<int> input;
     std::vector<int> expected;
@@ -12,11 +11,11 @@ struct SortTestCase
 };
 
 // Parameterized test fixture
-class SortAlgorithmTest : public ::testing::TestWithParam<std::tuple<std::function<void(std::vector<int>&)>,
-            SortTestCase> > {};
+class AlgoSortTest : public ::testing::TestWithParam<std::tuple<std::function<void(std::vector<int>&)>,
+            AlgoSortTestCase>> {};
 
 // Test cases covering various scenarios
-std::vector<SortTestCase> GetTestCases()
+std::vector<AlgoSortTestCase> GetTestCases()
 {
     return {
         // Test 1: Basic reverse sorted
@@ -84,70 +83,81 @@ std::vector<SortTestCase> GetTestCases()
     };
 }
 
-TEST_P(SortAlgorithmTest, SortsCorrectly)
+TEST_P(AlgoSortTest, SortsCorrectly)
 {
     auto [sort_func, test_case] = GetParam();
-    std::vector<int> nums = test_case.input;
-    sort_func(nums);
-    EXPECT_EQ(nums, test_case.expected) << "Failed for: " << test_case.description;
+    sort_func(test_case.input);
+    EXPECT_EQ(test_case.input, test_case.expected) << "Failed for: " << test_case.description;
 }
 
 // Instantiate tests for STL sort
 INSTANTIATE_TEST_SUITE_P(
-    STL_Sort_Tests,
-    SortAlgorithmTest,
+    STLSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::stl_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::stl_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
 
 // Instantiate tests for Quick sort
 INSTANTIATE_TEST_SUITE_P(
-    Quick_Sort_Tests,
-    SortAlgorithmTest,
+    QuickSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::quick_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::quick_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
 
 // Instantiate tests for Merge sort
 INSTANTIATE_TEST_SUITE_P(
-    Merge_Sort_Tests,
-    SortAlgorithmTest,
+    MergeSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::merge_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::merge_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
 
 // Instantiate tests for Bubble sort
 INSTANTIATE_TEST_SUITE_P(
-    Bubble_Sort_Tests,
-    SortAlgorithmTest,
+    BubbleSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::bubble_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::bubble_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
 
 // Instantiate tests for Insertion sort
 INSTANTIATE_TEST_SUITE_P(
-    Insertion_Sort_Tests,
-    SortAlgorithmTest,
+    InsertionSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::insertion_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::insertion_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
 
 // Instantiate tests for Selection sort
 INSTANTIATE_TEST_SUITE_P(
-    Selection_Sort_Tests,
-    SortAlgorithmTest,
+    SelectionSort,
+    AlgoSortTest,
     ::testing::Combine(
-        ::testing::Values(std::function<void(std::vector<int>&)>(algo::selection_sort<int>)),
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::selection_sort(vector); }
+        )),
         ::testing::ValuesIn(GetTestCases())
     )
 );
