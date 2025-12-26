@@ -4,5 +4,5 @@
 int main()
 {
     const std::vector<int> nums { 1, 2, 3, 4, 5 };
-    print("sum {}", multithreading::accumulate(nums));
+    println("sum {}", multithreading::accumulate(nums));
 }
