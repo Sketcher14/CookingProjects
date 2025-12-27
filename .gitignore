@@ -2,5 +2,7 @@
 .idea/
 cmake-build-*/
 
-# Subproject for testing
-Sandbox/
+# Sandbox project
+Sandbox/*
+!Sandbox/main.cpp
+!Sandbox/CMakeLists.txt
