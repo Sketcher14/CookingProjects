@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
 project(SortLab_Main)
-
-set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-fexperimental-library)
 
 add_executable(SortLab_Main main.cpp)
 

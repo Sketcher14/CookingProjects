@@ -1,7 +1,6 @@
-#include <iostream>
-
 #include "algo/sort.h"
-#include "print.h"
+
+#include <print>
 
 int main()
 {
@@ -11,8 +10,8 @@ int main()
     algo::quick_sort(nums1);
 
     for (const int num : nums)
-        print("{} ", num);
-    print("\n");
+        std::print("{} ", num);
+    std::println();
 
 
     return 0;
