@@ -8,6 +8,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# Disable the character-conversion warning for GoogleTest targets
+target_compile_options(gtest PRIVATE -Wno-character-conversion)
+
 add_executable(SortLab_Tests
         algo/sort_test.cpp
 )
