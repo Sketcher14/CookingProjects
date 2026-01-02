@@ -8,9 +8,9 @@ This project serves as a playground for exploring modern C++ features and implem
 
 ## Subprojects
 
-- **MultithreadingLab** - Concurrent programming experiments
+- **MultithreadingLab** - Concurrent programming problems
 - **Sandbox** - Experimental workspace for C++ practice
-- **SortLab** - Algorithm implementations with comprehensive testing
+- **SortLab** - Sort algorithm implementations with performance benchmarks
 
 ## Requirements
 
