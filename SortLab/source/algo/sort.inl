@@ -123,12 +123,6 @@ namespace algo
     }
 
     template<class RangeType>
-    void stl_sort(RangeType&& range)
-    {
-        std::sort(range.begin(), range.end());
-    }
-
-    template<class RangeType>
     void quick_sort(RangeType&& range)
     {
         local::quick_sort(range.data(), range.size());

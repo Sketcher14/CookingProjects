@@ -3,9 +3,6 @@
 namespace algo
 {
     template<class RangeType>
-    void stl_sort(RangeType&& range);
-
-    template<class RangeType>
     void quick_sort(RangeType&& range);
 
     template<class RangeType>

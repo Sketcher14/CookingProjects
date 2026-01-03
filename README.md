@@ -1,4 +1,4 @@
-# CookingProjects
+# Cooking Projects
 
 A C++ learning and practice repository
 
@@ -17,4 +17,5 @@ This project serves as a playground for exploring modern C++ features and implem
 - **C++ Compiler**: C++23 support required
 - **CMake**: 3.26 or higher
 - **Build System**: Ninja
+- **Boost**: 1.90 or higher 
 
