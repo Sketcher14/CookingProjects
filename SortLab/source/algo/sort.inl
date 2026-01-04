@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/sort/spreadsort/spreadsort.hpp>
+#include <boost/sort/spinsort/spinsort.hpp>
 #include <cassert>
 #include <algorithm>
 #include <vector>
@@ -150,5 +152,23 @@ namespace algo
     void selection_sort(RangeType&& range)
     {
         local::selection_sort(range.data(), range.size());
+    }
+
+    template<class RangeType>
+    void stl_sort(RangeType&& range)
+    {
+        std::sort(range.begin(), range.end());
+    }
+
+    template<class RangeType>
+    void boost_spreadsort(RangeType&& range)
+    {
+        boost::sort::spreadsort::spreadsort(range.begin(), range.end());
+    }
+
+    template<class RangeType>
+    void boost_spinsort(RangeType&& range)
+    {
+        boost::sort::spinsort(range.begin(), range.end());
     }
 }

@@ -8,7 +8,6 @@ else ()
     add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wconversion)
 endif ()
 
-
 add_subdirectory(Utility)
 
 add_subdirectory(MultithreadingLab)

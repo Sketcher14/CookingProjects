@@ -1,6 +1,4 @@
 #include <benchmark/benchmark.h>
-#include <boost/sort/spreadsort/spreadsort.hpp>
-#include <boost/sort/spinsort/spinsort.hpp>
 #include <random>
 
 #include "algo/sort.h"
@@ -119,13 +117,6 @@ static void BM_Sort(benchmark::State& state, SortFunction sort_function, DataGen
         ->Unit(benchmark::kMillisecond);
 
 
-/** Performance benchmarks for STL Sort */
-BENCHMARK_SORT_FAST(STL_Sort, Random, std::ranges::sort, generate_random_data);
-BENCHMARK_SORT_FAST(STL_Sort, Sorted, std::ranges::sort, generate_sorted_data);
-BENCHMARK_SORT_FAST(STL_Sort, Reversed, std::ranges::sort, generate_reversed_data);
-BENCHMARK_SORT_FAST(STL_Sort, AlmostSorted, std::ranges::sort, generate_almost_sorted_data);
-BENCHMARK_SORT_FAST(STL_Sort, Duplicated, std::ranges::sort, generate_duplicated_data);
-
 /** Performance benchmarks for Quick Sort */
 BENCHMARK_SORT_FAST(Quick_Sort, Random, algo::quick_sort<std::vector<int>&>, generate_random_data);
 BENCHMARK_SORT_FAST(Quick_Sort, Sorted, algo::quick_sort<std::vector<int>&>, generate_sorted_data);
@@ -165,40 +156,29 @@ BENCHMARK_SORT_SLOW(Selection_Sort, Reversed, algo::selection_sort<std::vector<i
 BENCHMARK_SORT_SLOW(Selection_Sort, AlmostSorted, algo::selection_sort<std::vector<int>&>, generate_almost_sorted_data);
 BENCHMARK_SORT_SLOW(Selection_Sort, Duplicated, algo::selection_sort<std::vector<int>&>, generate_duplicated_data);
 
+
+/** Performance benchmarks for STL Sort */
+BENCHMARK_SORT_FAST(STL_Sort, Random, algo::stl_sort<std::vector<int>&>, generate_random_data);
+BENCHMARK_SORT_FAST(STL_Sort, Sorted, algo::stl_sort<std::vector<int>&>, generate_sorted_data);
+BENCHMARK_SORT_FAST(STL_Sort, Reversed, algo::stl_sort<std::vector<int>&>, generate_reversed_data);
+BENCHMARK_SORT_FAST(STL_Sort, AlmostSorted, algo::stl_sort<std::vector<int>&>, generate_almost_sorted_data);
+BENCHMARK_SORT_FAST(STL_Sort, Duplicated, algo::stl_sort<std::vector<int>&>, generate_duplicated_data);
+
+
 /** Performance benchmarks for Boost Spreadsort */
-BENCHMARK_SORT_FAST(Boost_Spreadsort, Random,
-                    [](auto& data) { boost::sort::spreadsort::spreadsort(data.begin(), data.end()); },
-                    generate_random_data);
-BENCHMARK_SORT_FAST(Boost_Spreadsort, Sorted,
-                    [](auto& data) { boost::sort::spreadsort::spreadsort(data.begin(), data.end()); },
-                    generate_sorted_data);
-BENCHMARK_SORT_FAST(Boost_Spreadsort, Reversed,
-                    [](auto& data) { boost::sort::spreadsort::spreadsort(data.begin(), data.end()); },
-                    generate_reversed_data);
-BENCHMARK_SORT_FAST(Boost_Spreadsort, AlmostSorted,
-                    [](auto& data) { boost::sort::spreadsort::spreadsort(data.begin(), data.end()); },
-                    generate_almost_sorted_data);
-BENCHMARK_SORT_FAST(Boost_Spreadsort, Duplicated,
-                    [](auto& data) { boost::sort::spreadsort::spreadsort(data.begin(), data.end()); },
-                    generate_duplicated_data);
+BENCHMARK_SORT_FAST(Boost_Spreadsort, Random, algo::boost_spreadsort<std::vector<int>&>, generate_random_data);
+BENCHMARK_SORT_FAST(Boost_Spreadsort, Sorted, algo::boost_spreadsort<std::vector<int>&>, generate_sorted_data);
+BENCHMARK_SORT_FAST(Boost_Spreadsort, Reversed, algo::boost_spreadsort<std::vector<int>&>, generate_reversed_data);
+BENCHMARK_SORT_FAST(Boost_Spreadsort, AlmostSorted, algo::boost_spreadsort<std::vector<int>&>, generate_almost_sorted_data);
+BENCHMARK_SORT_FAST(Boost_Spreadsort, Duplicated, algo::boost_spreadsort<std::vector<int>&>, generate_duplicated_data);
 
 
 /** Performance benchmarks for Boost Spinsort */
-BENCHMARK_SORT_FAST(Boost_Spinsort, Random,
-                    [](auto& data) { boost::sort::spinsort(data.begin(), data.end()); },
-                    generate_random_data);
-BENCHMARK_SORT_FAST(Boost_Spinsort, Sorted,
-                    [](auto& data) { boost::sort::spinsort(data.begin(), data.end()); },
-                    generate_sorted_data);
-BENCHMARK_SORT_FAST(Boost_Spinsort, Reversed,
-                    [](auto& data) { boost::sort::spinsort(data.begin(), data.end()); },
-                    generate_reversed_data);
-BENCHMARK_SORT_FAST(Boost_Spinsort, AlmostSorted,
-                    [](auto& data) { boost::sort::spinsort(data.begin(), data.end()); },
-                    generate_almost_sorted_data);
-BENCHMARK_SORT_FAST(Boost_Spinsort, Duplicated,
-                    [](auto& data) { boost::sort::spinsort(data.begin(), data.end()); },
-                    generate_duplicated_data);
+BENCHMARK_SORT_FAST(Boost_Spinsort, Random, algo::boost_spinsort<std::vector<int>&>, generate_random_data);
+BENCHMARK_SORT_FAST(Boost_Spinsort, Sorted, algo::boost_spinsort<std::vector<int>&>, generate_sorted_data);
+BENCHMARK_SORT_FAST(Boost_Spinsort, Reversed, algo::boost_spinsort<std::vector<int>&>, generate_reversed_data);
+BENCHMARK_SORT_FAST(Boost_Spinsort, AlmostSorted, algo::boost_spinsort<std::vector<int>&>, generate_almost_sorted_data);
+BENCHMARK_SORT_FAST(Boost_Spinsort, Duplicated, algo::boost_spinsort<std::vector<int>&>, generate_duplicated_data);
 
 //--benchmark_filter=<regex>
 BENCHMARK_MAIN();

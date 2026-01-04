@@ -16,6 +16,15 @@ namespace algo
 
     template<class RangeType>
     void selection_sort(RangeType&& range);
+
+    template<class RangeType>
+    void stl_sort(RangeType&& range);
+
+    template<class RangeType>
+    void boost_spreadsort(RangeType&& range);
+
+    template<class RangeType>
+    void boost_spinsort(RangeType&& range);
 }
 
 #include "sort.inl"
