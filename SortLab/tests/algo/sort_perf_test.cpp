@@ -134,5 +134,18 @@ BENCHMARK_SORT_FAST(MergeSort, AlmostSorted, algo::merge_sort<std::vector<int>&>
                     test_utility::generate_almost_sorted_data);
 BENCHMARK_SORT_FAST(MergeSort, Duplicated, algo::merge_sort<std::vector<int>&>, test_utility::generate_duplicated_data);
 
+
+/** Performance benchmarks for Multithreaded Merge Sort */
+BENCHMARK_SORT_FAST(MultithreadedMergeSort, Random, algo::concurrent::merge_sort<std::vector<int>&>,
+                    test_utility::generate_random_data);
+BENCHMARK_SORT_FAST(MultithreadedMergeSort, Sorted, algo::concurrent::merge_sort<std::vector<int>&>,
+                    test_utility::generate_sorted_data);
+BENCHMARK_SORT_FAST(MultithreadedMergeSort, Reversed, algo::concurrent::merge_sort<std::vector<int>&>,
+                    test_utility::generate_reversed_data);
+BENCHMARK_SORT_FAST(MultithreadedMergeSort, AlmostSorted, algo::concurrent::merge_sort<std::vector<int>&>,
+                    test_utility::generate_almost_sorted_data);
+BENCHMARK_SORT_FAST(MultithreadedMergeSort, Duplicated, algo::concurrent::merge_sort<std::vector<int>&>,
+                    test_utility::generate_duplicated_data);
+
 //--benchmark_filter=<regex>
 BENCHMARK_MAIN();
