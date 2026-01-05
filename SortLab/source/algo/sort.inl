@@ -4,76 +4,13 @@
 #include <boost/sort/spinsort/spinsort.hpp>
 #include <cassert>
 #include <algorithm>
+#include <future>
 #include <vector>
 
 namespace algo
 {
     namespace local
     {
-        template<class T>
-        size_t quick_sort_partition(T* first, const size_t num)
-        {
-            assert(num > 1);
-
-            T pivot = first[(num - 1) / 2];
-
-            size_t i = 0, j = num - 1;
-            while (true)
-            {
-                while (first[i] < pivot)
-                    i++;
-                while (first[j] > pivot)
-                    j--;
-
-                if (i >= j)
-                    break;
-
-                std::swap(first[i++], first[j--]);
-            }
-
-            return j;
-        }
-
-        template<class T>
-        void quick_sort(T* first, const size_t num)
-        {
-            if (num > 1)
-            {
-                size_t pivot = quick_sort_partition(first, num);
-                quick_sort(first, pivot + 1);
-                quick_sort(first + pivot + 1, num - pivot - 1);
-            }
-        }
-
-        template<class T>
-        void merge_sort(T* first, const size_t num)
-        {
-            if (num > 1)
-            {
-                const size_t mid = num / 2;
-                merge_sort(first, mid);
-                merge_sort(first + mid, num - mid);
-
-                std::vector<T> temp;
-                size_t i = 0, j = mid;
-                while (i < mid && j < num)
-                {
-                    if (first[i] < first[j])
-                        temp.push_back(first[i++]);
-                    else
-                        temp.push_back(first[j++]);
-                }
-
-                while (i < mid)
-                    temp.push_back(first[i++]);
-
-                while (j < num)
-                    temp.push_back(first[j++]);
-
-                std::copy(temp.begin(), temp.end(), first);
-            }
-        }
-
         template<class T>
         void bubble_sort(T* first, const size_t num)
         {
@@ -122,18 +59,104 @@ namespace algo
                 std::swap(first[i], first[min_index]);
             }
         }
-    }
 
-    template<class RangeType>
-    void quick_sort(RangeType&& range)
-    {
-        local::quick_sort(range.data(), range.size());
-    }
+        template<class T>
+        size_t quick_sort_partition(T* first, const size_t num)
+        {
+            assert(num > 1);
 
-    template<class RangeType>
-    void merge_sort(RangeType&& range)
-    {
-        local::merge_sort(range.data(), range.size());
+            T pivot = first[(num - 1) / 2];
+
+            size_t i = 0, j = num - 1;
+            while (true)
+            {
+                while (first[i] < pivot)
+                    i++;
+                while (first[j] > pivot)
+                    j--;
+
+                if (i >= j)
+                    break;
+
+                std::swap(first[i++], first[j--]);
+            }
+
+            return j;
+        }
+
+        template<class T>
+        void quick_sort(T* first, const size_t num)
+        {
+            if (num > 1)
+            {
+                size_t pivot = quick_sort_partition(first, num);
+                quick_sort(first, pivot + 1);
+                quick_sort(first + pivot + 1, num - pivot - 1);
+            }
+        }
+
+        template<class T>
+        void merge(T* first, const size_t mid, const size_t num)
+        {
+            std::vector<T> temp;
+            size_t i = 0, j = mid;
+            while (i < mid && j < num)
+            {
+                if (first[i] < first[j])
+                    temp.push_back(first[i++]);
+                else
+                    temp.push_back(first[j++]);
+            }
+
+            while (i < mid)
+                temp.push_back(first[i++]);
+
+            while (j < num)
+                temp.push_back(first[j++]);
+
+            std::copy(temp.begin(), temp.end(), first);
+        }
+
+        template<class T>
+        void merge_sort(T* first, const size_t num)
+        {
+            if (num > 1)
+            {
+                const size_t mid = num / 2;
+                merge_sort(first, mid);
+                merge_sort(first + mid, num - mid);
+
+                merge(first, mid, num);
+            }
+        }
+
+        namespace concurrent
+        {
+            static constexpr size_t min_size_for_threading = 1000;
+
+            template<class T>
+            void merge_sort(T* first, const size_t num)
+            {
+                if (num > 1)
+                {
+                    if (num <= min_size_for_threading)
+                    {
+                        local::merge_sort(first, num);
+                        return;
+                    }
+
+                    const size_t mid = num / 2;
+                    // Current thread sorts the left part, a new thread sorts the right part
+                    auto future = std::async(std::launch::async, merge_sort<T>, first + mid, num - mid);
+                    merge_sort(first, mid);
+
+                    // waiting the right part
+                    future.get();
+
+                    merge(first, mid, num);
+                }
+            }
+        }
     }
 
     template<class RangeType>
@@ -161,14 +184,35 @@ namespace algo
     }
 
     template<class RangeType>
-    void boost_spreadsort(RangeType&& range)
+    void boost_spread_sort(RangeType&& range)
     {
         boost::sort::spreadsort::spreadsort(range.begin(), range.end());
     }
 
     template<class RangeType>
-    void boost_spinsort(RangeType&& range)
+    void boost_spin_sort(RangeType&& range)
     {
         boost::sort::spinsort(range.begin(), range.end());
+    }
+
+    template<class RangeType>
+    void quick_sort(RangeType&& range)
+    {
+        local::quick_sort(range.data(), range.size());
+    }
+
+    template<class RangeType>
+    void merge_sort(RangeType&& range)
+    {
+        local::merge_sort(range.data(), range.size());
+    }
+
+    namespace concurrent
+    {
+        template<class RangeType>
+        void merge_sort(RangeType&& range)
+        {
+            local::concurrent::merge_sort(range.data(), range.size());
+        }
     }
 }
