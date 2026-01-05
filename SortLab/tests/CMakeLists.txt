@@ -27,9 +27,11 @@ add_executable(SortLab_UnitTest
 
 target_link_libraries(SortLab_UnitTest PRIVATE GTest::gtest_main)
 target_link_libraries(SortLab_UnitTest PRIVATE SortLab_Algo)
+target_link_libraries(SortLab_UnitTest PRIVATE Utility_Test)
 
 include(GoogleTest)
 gtest_discover_tests(SortLab_UnitTest)
+
 
 # Performance benchmarks executable (Google Benchmark)
 add_executable(SortLab_Benchmark
@@ -38,3 +40,4 @@ add_executable(SortLab_Benchmark
 
 target_link_libraries(SortLab_Benchmark PRIVATE benchmark::benchmark)
 target_link_libraries(SortLab_Benchmark PRIVATE SortLab_Algo)
+target_link_libraries(SortLab_Benchmark PRIVATE Utility_Test)
