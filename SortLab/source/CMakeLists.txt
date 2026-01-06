@@ -12,5 +12,4 @@ target_include_directories(SortLab_Algo INTERFACE .)
 target_link_libraries(SortLab_Algo INTERFACE Boost::boost)
 
 target_link_libraries(SortLab_Main PRIVATE SortLab_Algo)
-target_link_libraries(SortLab_Main PUBLIC Utility)
 

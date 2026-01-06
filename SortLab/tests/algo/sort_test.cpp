@@ -238,6 +238,19 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+/** Instantiate tests for an advanced version of Multithreaded Merge sort */
+INSTANTIATE_TEST_SUITE_P(
+    MultithreadedMergeSortAdvanced,
+    AlgoSortTest,
+    ::testing::Combine(
+        ::testing::Values(std::function<void(std::vector<int>&)>(
+            [](std::vector<int>& vector){ algo::concurrent::merge_sort_advanced(vector); }
+        )),
+        ::testing::ValuesIn(GetTestCases())
+    )
+);
+
+
 int main(int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv);

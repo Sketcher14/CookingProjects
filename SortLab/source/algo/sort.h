@@ -30,6 +30,9 @@ namespace algo
     {
         template<class RangeType>
         void merge_sort(RangeType&& range);
+
+        template<class RangeType>
+        void merge_sort_advanced(RangeType&& range);
     }
 }
 
