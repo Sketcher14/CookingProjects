@@ -33,16 +33,16 @@ namespace algo
     namespace local
     {
         template<class T>
-        void bubble_sort(T* first, const size_t num)
+        void bubble_sort(T* range, const size_t size)
         {
-            for (size_t i = 0; i + 1 < num; ++i)
+            for (size_t i = 0; i + 1 < size; ++i)
             {
                 bool swapped = false;
-                for (size_t j = 0; j + i + 1 < num; ++j)
+                for (size_t j = 0; j + i + 1 < size; ++j)
                 {
-                    if (first[j + 1] < first[j])
+                    if (range[j + 1] < range[j])
                     {
-                        std::swap(first[j], first[j + 1]);
+                        std::swap(range[j], range[j + 1]);
                         swapped = true;
                     }
                 }
@@ -53,66 +53,66 @@ namespace algo
         }
 
         template<class T>
-        void insertion_sort(T* first, const size_t num)
+        void insertion_sort(T* range, const size_t size)
         {
-            for (size_t i = 1; i < num; ++i)
+            for (size_t i = 1; i < size; ++i)
             {
                 size_t j = i;
-                while (j >= 1 && first[j] < first[j - 1])
+                while (j >= 1 && range[j] < range[j - 1])
                 {
-                    std::swap(first[j], first[j - 1]);
+                    std::swap(range[j], range[j - 1]);
                     j--;
                 }
             }
         }
 
         template<class T>
-        void selection_sort(T* first, const size_t num)
+        void selection_sort(T* range, const size_t size)
         {
-            for (size_t i = 0; i + 1 < num; ++i)
+            for (size_t i = 0; i + 1 < size; ++i)
             {
                 size_t min_index = i;
-                for (size_t j = i + 1; j < num; ++j)
+                for (size_t j = i + 1; j < size; ++j)
                 {
-                    if (first[j] < first[min_index])
+                    if (range[j] < range[min_index])
                         min_index = j;
                 }
-                std::swap(first[i], first[min_index]);
+                std::swap(range[i], range[min_index]);
             }
         }
 
         template<class T>
-        size_t quick_sort_partition(T* first, const size_t num)
+        size_t quick_sort_partition(T* range, const size_t size)
         {
-            assert(num > 1);
+            assert(size > 1);
 
-            T pivot = first[(num - 1) / 2];
+            T pivot = range[(size - 1) / 2];
 
-            size_t i = 0, j = num - 1;
+            size_t i = 0, j = size - 1;
             while (true)
             {
-                while (first[i] < pivot)
+                while (range[i] < pivot)
                     i++;
-                while (first[j] > pivot)
+                while (range[j] > pivot)
                     j--;
 
                 if (i >= j)
                     break;
 
-                std::swap(first[i++], first[j--]);
+                std::swap(range[i++], range[j--]);
             }
 
             return j;
         }
 
         template<class T>
-        void quick_sort(T* first, const size_t num)
+        void quick_sort(T* range, const size_t size)
         {
-            if (num > 1)
+            if (size > 1)
             {
-                size_t pivot = quick_sort_partition(first, num);
-                quick_sort(first, pivot + 1);
-                quick_sort(first + pivot + 1, num - pivot - 1);
+                size_t pivot = quick_sort_partition(range, size);
+                quick_sort(range, pivot + 1);
+                quick_sort(range + pivot + 1, size - pivot - 1);
             }
         }
 
