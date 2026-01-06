@@ -1,8 +1,8 @@
-#include "test_utility.h"
+#include "utility.h"
 
 #include <random>
 
-namespace test_utility
+namespace utility::tests
 {
     // There is no need in random seed because it may lead to different performance results
     static constexpr unsigned int seed = 31;

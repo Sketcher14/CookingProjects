@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "algo/sort.h"
-#include "test_utility.h"
+#include "utility.h"
 
 struct AlgoSortTestCase
 {
@@ -61,7 +61,7 @@ std::vector<AlgoSortTestCase> GetTestCases()
         // Test 11: Large random array
         AlgoSortTestCase large_random_test;
         large_random_test.description = "Large random array";
-        auto data = test_utility::generate_random_data(size);
+        auto data = utility::tests::generate_random_data(size);
         large_random_test.input = data;
 
         std::ranges::sort(data);
@@ -74,7 +74,7 @@ std::vector<AlgoSortTestCase> GetTestCases()
         // Test 12: Large already sorted array
         AlgoSortTestCase large_sorted_test;
         large_sorted_test.description = "Large already sorted array";
-        auto data = test_utility::generate_sorted_data(size);
+        auto data = utility::tests::generate_sorted_data(size);
         large_sorted_test.input = data;
         large_sorted_test.expected = data;
 
@@ -85,7 +85,7 @@ std::vector<AlgoSortTestCase> GetTestCases()
         // Test 13: Large reverse sorted array
         AlgoSortTestCase large_reverse_sorted_test;
         large_reverse_sorted_test.description = "Large reverse sorted array";
-        auto data = test_utility::generate_reversed_data(size);
+        auto data = utility::tests::generate_reversed_data(size);
         large_reverse_sorted_test.input = data;
 
         std::ranges::sort(data);
@@ -98,7 +98,7 @@ std::vector<AlgoSortTestCase> GetTestCases()
         // Test 14: Large almost sorted array
         AlgoSortTestCase large_almost_sorted_test;
         large_almost_sorted_test.description = "Large almost sorted array";
-        auto data = test_utility::generate_almost_sorted_data(size);
+        auto data = utility::tests::generate_almost_sorted_data(size);
         large_almost_sorted_test.input = data;
 
         std::ranges::sort(data);
@@ -111,7 +111,7 @@ std::vector<AlgoSortTestCase> GetTestCases()
         // Test 15: Large array with duplicates
         AlgoSortTestCase large_duplicated_test;
         large_duplicated_test.description = "Large array with duplicates";
-        auto data = test_utility::generate_duplicated_data(size);
+        auto data = utility::tests::generate_duplicated_data(size);
         large_duplicated_test.input = data;
 
         std::ranges::sort(data);
@@ -226,7 +226,7 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-/** Instantiate tests for Merge sort */
+/** Instantiate tests for Multithreaded Merge sort */
 INSTANTIATE_TEST_SUITE_P(
     MultithreadedMergeSort,
     AlgoSortTest,

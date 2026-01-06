@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace test_utility
+namespace utility::tests
 {
     std::vector<int> generate_random_data(const size_t size);
     std::vector<int> generate_sorted_data(const size_t size);
