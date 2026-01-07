@@ -10,7 +10,7 @@
 namespace algo
 {
     template<class T>
-    size_t binary_search(T* range, const size_t size, const T target)
+    size_t binary_search(const T* range, const size_t size, const T target)
     {
         size_t left = 0, right = size;
 
@@ -56,11 +56,13 @@ namespace algo
             for (size_t i = 1; i < size; ++i)
             {
                 size_t j = i;
-                while (j >= 1 && range[j] < range[j - 1])
+                T key = range[i];
+                while (j >= 1 && key < range[j - 1])
                 {
-                    std::swap(range[j], range[j - 1]);
+                    range[j] = range[j - 1];
                     j--;
                 }
+                range[j] = key;
             }
         }
 
@@ -84,6 +86,7 @@ namespace algo
         {
             assert(size > 1);
 
+            // TODO Improve selecting the pivot element
             T pivot = range[(size - 1) / 2];
 
             size_t i = 0, j = size - 1;
@@ -106,12 +109,12 @@ namespace algo
         template<class T>
         void quick_sort(T* range, const size_t size)
         {
-            if (size > 1)
-            {
-                size_t pivot = quick_sort_partition(range, size);
-                quick_sort(range, pivot + 1);
-                quick_sort(range + pivot + 1, size - pivot - 1);
-            }
+            if (size <= 1)
+                return;
+
+            size_t pivot = quick_sort_partition(range, size);
+            quick_sort(range, pivot + 1);
+            quick_sort(range + pivot + 1, size - pivot - 1);
         }
 
         template<class T>
@@ -162,6 +165,7 @@ namespace algo
             merge_sort(range + mid, size - mid);
 
             // Merging left [0, mid) and right [mid, size) parts and then copying it to the initial range
+            // TODO Can avoid the allocation for every recursion call?
             std::vector<T> merge_result(size);
             merge(range, 0, mid, mid, size, merge_result, 0);
             std::copy(merge_result.begin(), merge_result.end(), range);
@@ -177,8 +181,7 @@ namespace algo
             {
                 if (size <= min_size_for_threading)
                 {
-                    for (size_t i = 0; i < size; ++i)
-                        result[i] = range[i];
+                    std::copy(range, range + size, result);
                     return;
                 }
 
