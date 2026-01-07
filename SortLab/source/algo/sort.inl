@@ -6,8 +6,6 @@
 #include <cassert>
 #include <future>
 #include <vector>
-#include <print>
-#include <execution>
 
 namespace algo
 {
@@ -173,6 +171,27 @@ namespace algo
         {
             static constexpr size_t min_size_for_threading = 1000;
 
+
+            template<class T>
+            void copy(T* range, const size_t size, T* result)
+            {
+                if (size <= min_size_for_threading)
+                {
+                    for (size_t i = 0; i < size; ++i)
+                        result[i] = range[i];
+                    return;
+                }
+
+                const size_t mid = size / 2;
+
+                // This thread copies the left part, a new thread copies the right part
+                auto right_future = std::async(std::launch::async, copy<T>, range + mid, size - mid, result + mid);
+                copy(range, mid, result);
+
+                // Waiting for the right part to be copied
+                right_future.get();
+            }
+
             template<class T>
             void merge_sort(T* range, const size_t size)
             {
@@ -187,13 +206,14 @@ namespace algo
 
                 const size_t mid = size / 2;
                 // This thread sorts the left part, a new thread sorts the right part
-                auto right_future = std::async(std::launch::async, merge_sort<T>, range + mid, size - mid);
-                merge_sort(range, mid);
+                auto right_future = std::async(std::launch::async, concurrent::merge_sort<T>, range + mid, size - mid);
+                concurrent::merge_sort(range, mid);
 
                 // Waiting for the right part to be sorted
                 right_future.get();
 
-                // This thread merges left [0, mid) and right [mid, size) parts and then copying it to the initial range
+                // One threaded merging of left [0, mid) and right [mid, size) parts
+                // and then copying it to the initial range
                 std::vector<T> merge_result(size);
                 local::merge(range, 0, mid, mid, size, merge_result, 0);
                 std::copy(merge_result.begin(), merge_result.end(), range);
@@ -225,16 +245,17 @@ namespace algo
                 }
 
                 const size_t mid1 = left1 + (right1 - left1) / 2;
-                const T median = range[mid1];
-                const size_t mid2 = left2 + algo::binary_search(range + left2, right2 - left2, median);
-                const size_t result_mid = padding + (mid1 - left1) + (mid2 - left2);
-                merge_result[result_mid] = median;
+                const T median1 = range[mid1];
+                const size_t mid2 = left2 + algo::binary_search(range + left2, right2 - left2, median1);
+                const size_t median1_index = padding + (mid1 - left1) + (mid2 - left2);
+                merge_result[median1_index] = median1;
 
                 // This thread merges left parts from the first and the second ranges,
                 // a new thread merges right parts from the first and the second ranges
-                auto right_future = std::async(std::launch::async, merge_advanced<T>, range, mid1 + 1, right1, mid2,
-                                               right2, std::ref(merge_result), result_mid + 1);
-                merge_advanced(range, left1, mid1, left2, mid2, merge_result, padding);
+                auto right_future = std::async(std::launch::async, concurrent::merge_advanced<T>,
+                                               range, mid1 + 1, right1, mid2, right2, std::ref(merge_result),
+                                               median1_index + 1);
+                concurrent::merge_advanced(range, left1, mid1, left2, mid2, merge_result, padding);
 
                 // Waiting for the right parts to be merged
                 right_future.get();
@@ -254,8 +275,9 @@ namespace algo
 
                 const size_t mid = size / 2;
                 // This thread sorts the left part, a new thread sorts the right part
-                auto right_future = std::async(std::launch::async, merge_sort_advanced<T>, range + mid, size - mid);
-                merge_sort_advanced(range, mid);
+                auto right_future = std::async(std::launch::async, concurrent::merge_sort_advanced<T>,
+                                               range + mid, size - mid);
+                concurrent::merge_sort_advanced(range, mid);
 
                 // Waiting for the right part to be sorted
                 right_future.get();
@@ -263,9 +285,8 @@ namespace algo
                 // Multithreaded merging of left [0, mid) and right [mid, size) parts
                 // and then copying it to the initial range
                 std::vector<T> merge_result(size);
-                merge_advanced(range, 0, mid, mid, size, merge_result, 0);
-                // TODO should be done in parallel
-                std::copy(merge_result.begin(), merge_result.end(), range);
+                concurrent::merge_advanced(range, 0, mid, mid, size, merge_result, 0);
+                concurrent::copy(merge_result.data(), merge_result.size(), range);
             }
         }
     }
