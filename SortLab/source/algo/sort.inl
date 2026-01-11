@@ -294,49 +294,49 @@ namespace algo
         }
     }
 
-    template<class RangeType>
+    template<ContiguousSortableRange RangeType>
     void bubble_sort(RangeType&& range)
     {
         local::bubble_sort(range.data(), range.size());
     }
 
-    template<class RangeType>
+    template<ContiguousSortableRange RangeType>
     void insertion_sort(RangeType&& range)
     {
         local::insertion_sort(range.data(), range.size());
     }
 
-    template<class RangeType>
+    template<ContiguousSortableRange RangeType>
     void selection_sort(RangeType&& range)
     {
         local::selection_sort(range.data(), range.size());
     }
 
-    template<class RangeType>
+    template<RandomAccessSortableRange RangeType>
     void stl_sort(RangeType&& range)
     {
         std::sort(range.begin(), range.end());
     }
 
-    template<class RangeType>
+    template<RandomAccessSortableRange RangeType>
     void boost_spread_sort(RangeType&& range)
     {
         boost::sort::spreadsort::spreadsort(range.begin(), range.end());
     }
 
-    template<class RangeType>
+    template<RandomAccessSortableRange RangeType>
     void boost_spin_sort(RangeType&& range)
     {
         boost::sort::spinsort(range.begin(), range.end());
     }
 
-    template<class RangeType>
+    template<ContiguousSortableRange RangeType>
     void quick_sort(RangeType&& range)
     {
         local::quick_sort(range.data(), range.size());
     }
 
-    template<class RangeType>
+    template<ContiguousSortableRange RangeType>
     void merge_sort(RangeType&& range)
     {
         local::merge_sort(range.data(), range.size());
@@ -344,13 +344,13 @@ namespace algo
 
     namespace concurrent
     {
-        template<class RangeType>
+        template<ContiguousSortableRange RangeType>
         void merge_sort(RangeType&& range)
         {
             local::concurrent::merge_sort(range.data(), range.size());
         }
 
-        template<class RangeType>
+        template<ContiguousSortableRange RangeType>
         void merge_sort_advanced(RangeType&& range)
         {
             local::concurrent::merge_sort_advanced(range.data(), range.size());
