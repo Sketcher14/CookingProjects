@@ -132,4 +132,4 @@ void string::print() const noexcept
 
     std::println();
 }
-}
+} // namespace sb

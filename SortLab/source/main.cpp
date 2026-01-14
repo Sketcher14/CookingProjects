@@ -5,7 +5,7 @@
 
 int main()
 {
-    std::vector<int> nums { 5, 4, 3, 2, 1 };
+    std::vector<int> nums{ 5, 4, 3, 2, 1 };
 
     // static constexpr size_t size = 100;
     // nums.resize(size);

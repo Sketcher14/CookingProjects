@@ -36,4 +36,4 @@ private:
     char* _data = nullptr;
     size_t _size = 0;
 };
-}
+} // namespace sb
