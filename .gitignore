@@ -6,3 +6,5 @@ cmake-build-*/
 Sandbox/*
 !Sandbox/main.cpp
 !Sandbox/CMakeLists.txt
+!Sandbox/cubes/
+!Sandbox/cubes/*
