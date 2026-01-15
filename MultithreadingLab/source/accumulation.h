@@ -2,9 +2,7 @@
 
 #include <vector>
 
-namespace multithreading
+namespace concurrent
 {
 int accumulate(const std::vector<int>& nums);
-
-int accumulate_fast(const std::vector<int>& nums);
-} // namespace multithreading
+} // namespace concurrent

@@ -6,5 +6,3 @@ add_executable(MultithreadingLab_Main
         accumulation.h
         accumulation.cpp
 )
-
-target_link_libraries(MultithreadingLab_Main PUBLIC Utility)

@@ -5,18 +5,13 @@
 #include <numeric>
 #include <thread>
 
-namespace multithreading
+namespace concurrent
 {
 int accumulate(const std::vector<int>& nums)
 {
-    return std::accumulate(nums.begin(), nums.end(), 0);
-}
-
-int accumulate_fast(const std::vector<int>& nums)
-{
     static constexpr size_t min_size_for_threading = 1000;
     if (nums.size() < min_size_for_threading)
-        return accumulate(nums);
+        return std::accumulate(nums.begin(), nums.end(), 0);
 
     size_t num_workers = std::thread::hardware_concurrency();
     if (num_workers == 0)
@@ -60,4 +55,4 @@ int accumulate_fast(const std::vector<int>& nums)
 
     return total_sum.load();
 }
-} // namespace multithreading
+} // namespace concurrent
