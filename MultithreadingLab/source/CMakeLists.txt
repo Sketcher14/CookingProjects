@@ -6,4 +6,6 @@ add_executable(MultithreadingLab_Main
         accumulation.cpp
         thread_pool.h
         thread_pool.cpp
+        time_manager.h
+        time_manager.cpp
 )
