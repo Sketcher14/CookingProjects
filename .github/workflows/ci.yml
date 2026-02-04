@@ -18,10 +18,11 @@ jobs:
             cxx: g++-14
             install_boost: sudo apt-get update && sudo apt-get install -y libboost-all-dev
           - os: macos-latest
-            name: macOS (Apple Clang)
-            cc: clang
-            cxx: clang++
-            install_boost: brew install boost
+            name: macOS (LLVM Clang)
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
+            install_boost: brew install llvm boost
+            extra_cmake_flags: -DCMAKE_EXE_LINKER_FLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm/lib/c++"
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }}
@@ -42,7 +43,7 @@ jobs:
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
-        run: cmake -B build -S .
+        run: cmake -B build -S . ${{ matrix.extra_cmake_flags }}
 
       - name: Build
         run: cmake --build build
