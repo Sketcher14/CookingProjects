@@ -8,11 +8,13 @@ else ()
     add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wconversion)
 endif ()
 
-# Adding sanitizers
-add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
-add_link_options(-fsanitize=address)
-#add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
-#add_link_options(-fsanitize=thread)
+# Adding sanitizers (GCC/Clang only)
+if (NOT MSVC)
+    add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address)
+    #add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+    #add_link_options(-fsanitize=thread)
+endif ()
 
 
 # Making available common dependencies GoogleTest, GoogleBenchmark for all subprojects
@@ -33,8 +35,10 @@ FetchContent_MakeAvailable(
         googlebenchmark
 )
 
-# Disable the character-conversion warning for GoogleTest target
-target_compile_options(gtest PRIVATE -Wno-character-conversion)
+# Disable the character-conversion warning for GoogleTest target (Clang only)
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(gtest PRIVATE -Wno-character-conversion)
+endif ()
 
 
 # My subprojects
