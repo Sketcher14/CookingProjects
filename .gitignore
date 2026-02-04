@@ -8,6 +8,3 @@ Sandbox/*
 !Sandbox/CMakeLists.txt
 !Sandbox/cubes/
 !Sandbox/cubes/*
-
-# Piping project
-Piping/*

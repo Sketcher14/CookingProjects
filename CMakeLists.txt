@@ -45,6 +45,5 @@ endif ()
 add_subdirectory(Utility)
 
 add_subdirectory(MultithreadingLab)
-add_subdirectory(Piping)
 add_subdirectory(Sandbox)
 add_subdirectory(SortLab)

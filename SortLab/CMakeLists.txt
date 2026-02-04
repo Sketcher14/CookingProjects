@@ -4,7 +4,7 @@ project(SortLab)
 if(POLICY CMP0167)
     cmake_policy(SET CMP0167 NEW)
 endif()
-find_package(Boost 1.90 CONFIG REQUIRED)
+find_package(Boost 1.83 CONFIG REQUIRED)
 
 add_subdirectory(source)
 add_subdirectory(tests)
