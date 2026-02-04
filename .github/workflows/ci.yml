@@ -8,8 +8,23 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-24.04
-    name: Linux (GCC 14)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            name: Linux (GCC 14)
+            cc: gcc-14
+            cxx: g++-14
+            install_boost: sudo apt-get update && sudo apt-get install -y libboost-all-dev
+          - os: macos-latest
+            name: macOS (Clang)
+            cc: clang
+            cxx: clang++
+            install_boost: brew install boost
+
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
 
     steps:
       - name: Checkout
@@ -21,12 +36,12 @@ jobs:
           cmakeVersion: "~4.0"
 
       - name: Install Boost
-        run: sudo apt-get update && sudo apt-get install -y libboost-all-dev
+        run: ${{ matrix.install_boost }}
 
       - name: Configure
         env:
-          CC: gcc-14
-          CXX: g++-14
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
         run: cmake -B build -S .
 
       - name: Build

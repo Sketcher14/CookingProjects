@@ -17,6 +17,6 @@ This project serves as a playground for exploring modern C++ features and implem
 ## Requirements
 
 - **C++ Compiler**: C++23 support required
-- **CMake**: 3.26 or higher
+- **CMake**: 4.0 or higher
 - **Boost**: 1.83 or higher 
 
