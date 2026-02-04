@@ -2,6 +2,9 @@
 .idea/
 cmake-build-*/
 
+# CMake build directory
+build/
+
 # Sandbox project
 Sandbox/*
 !Sandbox/main.cpp

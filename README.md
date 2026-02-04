@@ -1,5 +1,7 @@
 # Cooking Projects
 
+[![CI](https://github.com/Sketcher14/CookingProjects/actions/workflows/ci.yml/badge.svg)](https://github.com/Sketcher14/CookingProjects/actions/workflows/ci.yml)
+
 A C++ learning and practice repository
 
 ## Overview

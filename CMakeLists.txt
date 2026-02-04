@@ -41,6 +41,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif ()
 
 
+# Enable testing for CTest
+enable_testing()
+
 # My subprojects
 add_subdirectory(Utility)
 

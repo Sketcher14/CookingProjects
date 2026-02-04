@@ -19,5 +19,7 @@ int main()
 
     algo::concurrent::merge_sort_advanced(nums);
 
-    std::println("{}", nums);
+    for (const int num : nums)
+        std::print("{} ", num);
+    std::println("");
 }
