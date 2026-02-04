@@ -35,8 +35,10 @@ FetchContent_MakeAvailable(
         googlebenchmark
 )
 
-# Disable the character-conversion warning for GoogleTest target (Clang only)
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+# Disable the character-conversion warning for GoogleTest target (if supported)
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-Wno-character-conversion HAS_WNO_CHARACTER_CONVERSION)
+if (HAS_WNO_CHARACTER_CONVERSION)
     target_compile_options(gtest PRIVATE -Wno-character-conversion)
 endif ()
 
