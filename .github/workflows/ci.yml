@@ -18,10 +18,10 @@ jobs:
             cxx: g++-14
             install_boost: sudo apt-get update && sudo apt-get install -y libboost-all-dev
           - os: macos-latest
-            name: macOS (LLVM Clang)
-            cc: /opt/homebrew/opt/llvm/bin/clang
-            cxx: /opt/homebrew/opt/llvm/bin/clang++
-            install_boost: brew install llvm boost
+            name: macOS (Apple Clang)
+            cc: clang
+            cxx: clang++
+            install_boost: brew install boost
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }}
