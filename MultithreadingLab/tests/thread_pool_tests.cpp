@@ -1,9 +1,14 @@
+#include "thread_pool.h"
+
 #include <atomic>
 #include <chrono>
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "thread_pool.h"
+static_assert(!std::is_copy_constructible_v<concurrent::thread_pool>);
+static_assert(!std::is_copy_assignable_v<concurrent::thread_pool>);
+static_assert(!std::is_move_constructible_v<concurrent::thread_pool>);
+static_assert(!std::is_move_assignable_v<concurrent::thread_pool>);
 
 TEST(ThreadPoolTest, ZeroSizePool)
 {
@@ -13,18 +18,6 @@ TEST(ThreadPoolTest, ZeroSizePool)
 TEST(ThreadPoolTest, NotEmptyPool)
 {
     concurrent::thread_pool pool(10);
-}
-
-TEST(ThreadPoolTest, NotCopyable)
-{
-    EXPECT_FALSE(std::is_copy_constructible_v<concurrent::thread_pool>);
-    EXPECT_FALSE(std::is_copy_assignable_v<concurrent::thread_pool>);
-}
-
-TEST(ThreadPoolTest, NotMovable)
-{
-    EXPECT_FALSE(std::is_move_constructible_v<concurrent::thread_pool>);
-    EXPECT_FALSE(std::is_move_assignable_v<concurrent::thread_pool>);
 }
 
 TEST(ThreadPoolTest, PushLambda)
@@ -241,10 +234,4 @@ TEST(ThreadPoolTest, DestructionWithPendingTasks)
     }
     EXPECT_EQ(started.load(), 1);
     EXPECT_EQ(started.load(), completed.load());
-}
-
-int main(int argc, char** argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }
