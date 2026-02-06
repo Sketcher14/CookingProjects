@@ -16,6 +16,12 @@ public:
     timer_manager();
     ~timer_manager();
 
+    timer_manager(const timer_manager& other) = delete;
+    timer_manager& operator=(const timer_manager& other) = delete;
+
+    timer_manager(timer_manager&& other) = delete;
+    timer_manager& operator=(timer_manager&& other) = delete;
+
     void set_timer(std::function<void()> callback, const time_point fire_time);
 
 private:

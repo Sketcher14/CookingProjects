@@ -17,10 +17,14 @@ timer_manager::~timer_manager()
 
 void timer_manager::set_timer(std::function<void()> callback, const time_point fire_time)
 {
+    // TODO Handle with an exception
+    if (!callback)
+        return;
+
     bool notify = false;
     {
         std::scoped_lock lock(_mutex);
-        notify = _callbacks.empty();
+        notify = _callbacks.empty() || fire_time < _callbacks.top().fire_time;
         _callbacks.emplace(std::move(callback), fire_time);
     }
 
@@ -50,7 +54,13 @@ void timer_manager::run(const std::stop_token stop_token)
                 auto callback = _callbacks.top().callback;
                 _callbacks.pop();
 
-                callback();
+                // TODO Handle with an exception
+                if (callback)
+                    callback();
+            }
+            else
+            {
+                break;
             }
         }
     }
