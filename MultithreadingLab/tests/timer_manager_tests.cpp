@@ -245,7 +245,6 @@ TEST(TimerManagerTest, CorrectExecutionOrderDecreasingTime)
     EXPECT_GE(first_exec_time.count(), first_wait_time.count());
     EXPECT_LE(first_exec_time.count(), (first_wait_time + tolerance_time).count());
 
-    // TODO This check failed once. Why?
     std::vector<int> expected_queue{ 2, 1 };
     EXPECT_EQ(actual_queue, expected_queue);
 }
@@ -374,29 +373,44 @@ TEST(TimerManagerTest, DestructionWithWaitingCallback)
     EXPECT_EQ(counter.load(), 1);
 }
 
-TEST(TimerManagerTest, StressTest)
+TEST(TimerManagerTest, MultithreadedSetTimers)
 {
     concurrent::timer_manager timer_manager;
 
-    constexpr size_t iteration_num = 1e4;
-    constexpr auto max_wait_time = 1000ms;
+    constexpr size_t threads_num = 10;
+    constexpr size_t iterations_per_thread = 1000;
+    constexpr size_t total_iterations = threads_num * iterations_per_thread;
 
-    constexpr unsigned int seed = 31;
-    std::mt19937 generator(seed);
-    std::uniform_int_distribution<int> distrib(0, static_cast<int>(max_wait_time.count()));
+    constexpr int max_distribution = 100;
+    constexpr auto max_callback_wait_time = std::chrono::milliseconds(max_distribution);
 
-    std::atomic<int> counter;
+    std::vector<std::jthread> threads;
+    threads.reserve(threads_num);
+
+    std::atomic<int> counter{ 0 };
     const auto inc_counter_callback = [&counter] { ++counter; };
-
     const auto start_time = std::chrono::system_clock::now();
-    for (size_t i = 0; i < iteration_num; ++i)
+    for (size_t i = 0; i < threads_num; ++i)
     {
-        const int random_value = distrib(generator);
-        const auto fire_time = start_time + std::chrono::milliseconds(random_value);
-        timer_manager.set_timer(inc_counter_callback, fire_time);
+        constexpr unsigned int seed = 31;
+        threads.emplace_back(
+                [&, seed = seed + static_cast<unsigned int>(i)]
+                {
+                    std::mt19937 generator(seed);
+                    std::uniform_int_distribution<int> distrib(0, max_distribution);
+                    for (size_t j = 0; j < iterations_per_thread; ++j)
+                    {
+                        const auto wait_time = std::chrono::milliseconds(distrib(generator));
+                        timer_manager.set_timer(inc_counter_callback, start_time + wait_time);
+                    }
+                });
     }
 
-    std::this_thread::sleep_until(start_time + max_wait_time + tolerance_time);
+    for (auto& thread: threads)
+        thread.join();
 
-    EXPECT_EQ(counter.load(), iteration_num);
+    // Waiting for all callbacks to fire
+    std::this_thread::sleep_until(start_time + max_callback_wait_time + tolerance_time);
+
+    EXPECT_EQ(counter.load(), total_iterations);
 }
