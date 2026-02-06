@@ -1,6 +1,7 @@
 #pragma once
 
 #include <condition_variable>
+#include <exception>
 #include <functional>
 #include <mutex>
 #include <queue>
@@ -14,6 +15,7 @@ class timer_manager final
 
 public:
     timer_manager();
+    explicit timer_manager(std::function<void(std::exception_ptr)> exception_handler);
     ~timer_manager();
 
     timer_manager(const timer_manager& other) = delete;
@@ -50,6 +52,8 @@ private:
 
     std::priority_queue<callback_data> _callbacks;
     uint64_t _callbacks_counter = 0;
+
+    std::function<void(std::exception_ptr)> _exception_handler;
 
     void run(const std::stop_token stop_token);
 };

@@ -25,7 +25,7 @@ TEST(TimerManagerTest, CallbackFireTimeInFuture)
     concurrent::timer_manager timer_manager;
 
     std::atomic<bool> done{ false };
-    const auto callback = [&done]()
+    auto callback = [&done]()
     {
         done = true;
         done.notify_one();
@@ -50,7 +50,7 @@ TEST(TimerManagerTest, CallbackFireTimeInPresent)
     concurrent::timer_manager timer_manager;
 
     std::atomic<bool> done{ false };
-    const auto callback = [&done]()
+    auto callback = [&done]()
     {
         done = true;
         done.notify_one();
@@ -74,7 +74,7 @@ TEST(TimerManagerTest, CallbackFireTimeInPast)
     concurrent::timer_manager timer_manager;
 
     std::atomic<bool> done{ false };
-    const auto callback = [&done]()
+    auto callback = [&done]()
     {
         done = true;
         done.notify_one();
@@ -97,28 +97,32 @@ TEST(TimerManagerTest, InvalidCallback)
 {
     concurrent::timer_manager timer_manager;
 
-    timer_manager.set_timer(nullptr, std::chrono::system_clock::now());
-    timer_manager.set_timer({}, std::chrono::system_clock::now());
-    timer_manager.set_timer(std::function<void()>(nullptr), std::chrono::system_clock::now());
-
-    // Making sure all timers are executed
-    std::this_thread::sleep_for(1ms);
+    EXPECT_THROW(timer_manager.set_timer(nullptr, std::chrono::system_clock::now()), std::invalid_argument);
+    EXPECT_THROW(timer_manager.set_timer({}, std::chrono::system_clock::now()), std::invalid_argument);
+    EXPECT_THROW(timer_manager.set_timer(std::function<void()>(nullptr), std::chrono::system_clock::now()),
+                 std::invalid_argument);
 }
 
 TEST(TimerManagerTest, InvalidNestedCallback)
 {
-    concurrent::timer_manager timer_manager;
-
-    const auto callback = [&timer_manager]()
+    std::atomic<bool> exception_handled{ false };
+    auto exception_handler = [&exception_handled](std::exception_ptr exception)
     {
-        timer_manager.set_timer(nullptr, std::chrono::system_clock::now());
-        timer_manager.set_timer({}, std::chrono::system_clock::now());
-        timer_manager.set_timer(std::function<void()>(nullptr), std::chrono::system_clock::now());
+        if (exception)
+        {
+            EXPECT_THROW(std::rethrow_exception(exception), std::invalid_argument);
+            exception_handled = true;
+            exception_handled.notify_one();
+        }
     };
+    concurrent::timer_manager timer_manager(std::move(exception_handler));
+
+    auto callback = [&timer_manager]() { timer_manager.set_timer(nullptr, std::chrono::system_clock::now()); };
 
     timer_manager.set_timer(std::move(callback), std::chrono::system_clock::now());
 
-    std::this_thread::sleep_for(1ms);
+    exception_handled.wait(false);
+    EXPECT_TRUE(exception_handled.load());
 }
 
 TEST(TimerManagerTest, PassCallbackByLvalue)
@@ -154,7 +158,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderIncreasingTime)
     actual_queue.reserve(final_size);
 
     std::atomic<bool> first_done{ false };
-    const auto first_callback = [&first_done, &actual_queue]
+    auto first_callback = [&first_done, &actual_queue]
     {
         actual_queue.push_back(1);
         first_done = true;
@@ -164,7 +168,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderIncreasingTime)
     constexpr auto first_wait_time = 100ms;
 
     std::atomic<bool> second_done{ false };
-    const auto second_callback = [&second_done, &actual_queue]
+    auto second_callback = [&second_done, &actual_queue]
     {
         actual_queue.push_back(2);
         second_done = true;
@@ -207,7 +211,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderDecreasingTime)
     actual_queue.reserve(final_size);
 
     std::atomic<bool> first_done{ false };
-    const auto first_callback = [&first_done, &actual_queue]
+    auto first_callback = [&first_done, &actual_queue]
     {
         actual_queue.push_back(1);
         first_done = true;
@@ -217,7 +221,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderDecreasingTime)
     constexpr auto first_wait_time = 200ms;
 
     std::atomic<bool> second_done{ false };
-    const auto second_callback = [&second_done, &actual_queue]
+    auto second_callback = [&second_done, &actual_queue]
     {
         actual_queue.push_back(2);
         second_done = true;
@@ -260,7 +264,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderSameTime)
     actual_queue.reserve(final_size);
 
     std::atomic<bool> done{ false };
-    const auto first_callback = [&done, &actual_queue]
+    auto first_callback = [&done, &actual_queue]
     {
         actual_queue.push_back(1);
         if (actual_queue.size() == final_size)
@@ -269,7 +273,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderSameTime)
             done.notify_one();
         }
     };
-    const auto second_callback = [&done, &actual_queue]
+    auto second_callback = [&done, &actual_queue]
     {
         actual_queue.push_back(2);
         if (actual_queue.size() == final_size)
@@ -278,7 +282,7 @@ TEST(TimerManagerTest, CorrectExecutionOrderSameTime)
             done.notify_one();
         }
     };
-    const auto third_callback = [&done, &actual_queue]
+    auto third_callback = [&done, &actual_queue]
     {
         actual_queue.push_back(3);
         if (actual_queue.size() == final_size)
@@ -318,7 +322,7 @@ TEST(TimerManagerTest, CorrectExecutionNestedSetTimer)
     actual_queue.reserve(final_size);
 
     std::atomic<bool> done{ false };
-    const auto tricky_callback = [&]
+    auto tricky_callback = [&]
     {
         actual_queue.push_back(1);
         timer_manager.set_timer(
@@ -389,7 +393,7 @@ TEST(TimerManagerTest, MultithreadedSetTimers)
 
     std::atomic<int> counter{ 0 };
     const auto inc_counter_callback = [&counter] { ++counter; };
-    const auto start_time = std::chrono::system_clock::now();
+
     for (size_t i = 0; i < threads_num; ++i)
     {
         constexpr unsigned int seed = 31;
@@ -398,6 +402,8 @@ TEST(TimerManagerTest, MultithreadedSetTimers)
                 {
                     std::mt19937 generator(seed);
                     std::uniform_int_distribution<int> distrib(0, max_distribution);
+                    const auto start_time = std::chrono::system_clock::now();
+
                     for (size_t j = 0; j < iterations_per_thread; ++j)
                     {
                         const auto wait_time = std::chrono::milliseconds(distrib(generator));
@@ -410,7 +416,41 @@ TEST(TimerManagerTest, MultithreadedSetTimers)
         thread.join();
 
     // Waiting for all callbacks to fire
-    std::this_thread::sleep_until(start_time + max_callback_wait_time + tolerance_time);
+    std::this_thread::sleep_for(max_callback_wait_time + tolerance_time);
 
     EXPECT_EQ(counter.load(), total_iterations);
+}
+
+TEST(TimerManagerTest, CallbackThrowsException)
+{
+    std::atomic<bool> exception_handled{ false };
+    auto exception_handler = [&exception_handled](std::exception_ptr exception)
+    {
+        if (exception)
+        {
+            exception_handled = true;
+            exception_handled.notify_one();
+        }
+    };
+    concurrent::timer_manager timer_manager(std::move(exception_handler));
+
+    std::atomic<bool> done{ false };
+    auto good_callback = [&done]
+    {
+        done = true;
+        done.notify_one();
+    };
+    auto bad_callback = [] { throw std::runtime_error("Error"); };
+
+    const auto start_time = std::chrono::system_clock::now();
+    timer_manager.set_timer(std::move(bad_callback), start_time);
+    timer_manager.set_timer(std::move(good_callback), start_time + 100ms);
+
+    // Waiting when an exception from the bad_callback will be handled
+    exception_handled.wait(false);
+    EXPECT_TRUE(exception_handled.load());
+
+    // Waiting when the good_callback will be executed. The bad_callback doesn't interrupt it.
+    done.wait(false);
+    EXPECT_TRUE(done.load());
 }

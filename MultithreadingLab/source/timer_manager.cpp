@@ -2,7 +2,10 @@
 
 namespace concurrent
 {
-timer_manager::timer_manager()
+timer_manager::timer_manager() : timer_manager(nullptr)
+{}
+timer_manager::timer_manager(std::function<void(std::exception_ptr)> exception_handler) :
+    _exception_handler(std::move(exception_handler))
 {
     _thread = std::jthread(std::bind_front(&timer_manager::run, this));
 }
@@ -17,9 +20,8 @@ timer_manager::~timer_manager()
 
 void timer_manager::set_timer(std::function<void()> callback, const time_point fire_time)
 {
-    // TODO Handle with an exception
     if (!callback)
-        return;
+        throw std::invalid_argument("Callback must be callable");
 
     bool notify = false;
     {
@@ -54,9 +56,18 @@ void timer_manager::run(const std::stop_token stop_token)
                 auto callback = _callbacks.top().callback;
                 _callbacks.pop();
 
-                // TODO Handle with an exception
-                if (callback)
-                    callback();
+                try
+                {
+                    // Callback might have nested set_timer with invalid callback
+                    if (callback)
+                        callback();
+                    else
+                        throw std::invalid_argument("Callback must be callable");
+                } catch (...)
+                {
+                    if (_exception_handler)
+                        _exception_handler(std::current_exception());
+                }
             }
             else
             {
