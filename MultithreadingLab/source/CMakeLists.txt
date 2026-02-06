@@ -6,8 +6,8 @@ add_library(MultithreadingLab_Library STATIC
         accumulation.cpp
         thread_pool.h
         thread_pool.cpp
-        time_manager.h
-        time_manager.cpp
+        timer_manager.h
+        timer_manager.cpp
 )
 target_include_directories(MultithreadingLab_Library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

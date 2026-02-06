@@ -7,13 +7,13 @@
 #include <thread>
 
 
-class time_manager final
+class timer_manager final
 {
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
 
 public:
-    time_manager();
-    ~time_manager();
+    timer_manager();
+    ~timer_manager();
 
     void set_timer(std::function<void()> callback, const time_point fire_time);
 

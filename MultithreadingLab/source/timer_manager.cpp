@@ -1,11 +1,11 @@
-#include "time_manager.h"
+#include "timer_manager.h"
 
-time_manager::time_manager()
+timer_manager::timer_manager()
 {
-    _thread = std::jthread(std::bind_front(&time_manager::run, this));
+    _thread = std::jthread(std::bind_front(&timer_manager::run, this));
 }
 
-time_manager::~time_manager()
+timer_manager::~timer_manager()
 {
     _thread.request_stop();
 
@@ -13,7 +13,7 @@ time_manager::~time_manager()
         _thread.join();
 }
 
-void time_manager::set_timer(std::function<void()> callback, const time_point fire_time)
+void timer_manager::set_timer(std::function<void()> callback, const time_point fire_time)
 {
     bool notify = false;
     {
@@ -26,7 +26,7 @@ void time_manager::set_timer(std::function<void()> callback, const time_point fi
         _cv.notify_one();
 }
 
-void time_manager::run(const std::stop_token stop_token)
+void timer_manager::run(const std::stop_token stop_token)
 {
     while (true)
     {
