@@ -21,9 +21,6 @@ thread_pool::~thread_pool()
     for (auto& thread: _threads)
         thread.request_stop();
 
-    // Waking up all waiting threads
-    _cv.notify_all();
-
     // Explicitly join all threads before the mutex and cv are destructed.
     for (auto& thread: _threads)
     {
