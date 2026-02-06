@@ -6,7 +6,8 @@
 #include <queue>
 #include <thread>
 
-
+namespace concurrent
+{
 class timer_manager final
 {
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
@@ -41,3 +42,4 @@ private:
 
     void run(const std::stop_token stop_token);
 };
+} // namespace concurrent

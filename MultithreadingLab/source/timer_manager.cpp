@@ -1,5 +1,7 @@
 #include "timer_manager.h"
 
+namespace concurrent
+{
 timer_manager::timer_manager()
 {
     _thread = std::jthread(std::bind_front(&timer_manager::run, this));
@@ -53,3 +55,4 @@ void timer_manager::run(const std::stop_token stop_token)
         }
     }
 }
+} // namespace concurrent
