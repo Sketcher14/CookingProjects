@@ -3,6 +3,7 @@ project(MultithreadingLab_Tests)
 # Unit tests executable (GoogleTest)
 add_executable(MultithreadingLab_UnitTests
         thread_pool_tests.cpp
+        timer_manager_tests.cpp
 )
 
 target_link_libraries(MultithreadingLab_UnitTests PRIVATE
