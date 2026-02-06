@@ -27,15 +27,19 @@ public:
 private:
     struct callback_data
     {
+        uint64_t id;
         std::function<void()> callback;
         time_point fire_time;
 
-        explicit callback_data(std::function<void()> in_callback, const time_point in_fire_time) :
-            callback(std::move(in_callback)), fire_time(in_fire_time)
+        explicit callback_data(const uint64_t in_id, std::function<void()> in_callback, const time_point in_fire_time) :
+            id(in_id), callback(std::move(in_callback)), fire_time(in_fire_time)
         {}
 
         bool operator<(const callback_data& other) const
         {
+            if (fire_time == other.fire_time)
+                return id > other.id;
+
             return fire_time > other.fire_time;
         }
     };
@@ -45,6 +49,7 @@ private:
     std::condition_variable_any _cv;
 
     std::priority_queue<callback_data> _callbacks;
+    uint64_t _callbacks_counter = 0;
 
     void run(const std::stop_token stop_token);
 };

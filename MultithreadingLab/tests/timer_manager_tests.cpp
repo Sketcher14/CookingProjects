@@ -290,16 +290,19 @@ TEST(TimerManagerTest, CorrectExecutionOrderSameTime)
     };
 
     const auto start_time = std::chrono::system_clock::now();
-    timer_manager.set_timer(std::move(first_callback), start_time);
-    timer_manager.set_timer(std::move(second_callback), start_time);
-    timer_manager.set_timer(std::move(third_callback), start_time);
+    constexpr auto callbacks_wait_time = 100ms;
+    const auto callbacks_fire_time = start_time + callbacks_wait_time;
+
+    timer_manager.set_timer(std::move(first_callback), callbacks_fire_time);
+    timer_manager.set_timer(std::move(second_callback), callbacks_fire_time);
+    timer_manager.set_timer(std::move(third_callback), callbacks_fire_time);
 
     done.wait(false);
     const auto exec_time =
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
 
-    EXPECT_GE(exec_time.count(), 0);
-    EXPECT_LE(exec_time.count(), tolerance_time.count());
+    EXPECT_GE(exec_time.count(), callbacks_wait_time.count());
+    EXPECT_LE(exec_time.count(), (callbacks_wait_time + tolerance_time).count());
 
     std::vector<int> expected_queue{ 1, 2, 3 };
     EXPECT_EQ(actual_queue, expected_queue);
@@ -393,7 +396,7 @@ TEST(TimerManagerTest, StressTest)
         timer_manager.set_timer(inc_counter_callback, fire_time);
     }
 
-    std::this_thread::sleep_for(max_wait_time);
+    std::this_thread::sleep_until(start_time + max_wait_time + tolerance_time);
 
     EXPECT_EQ(counter.load(), iteration_num);
 }

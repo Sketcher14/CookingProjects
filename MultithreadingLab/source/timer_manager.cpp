@@ -25,7 +25,7 @@ void timer_manager::set_timer(std::function<void()> callback, const time_point f
     {
         std::scoped_lock lock(_mutex);
         notify = _callbacks.empty() || fire_time < _callbacks.top().fire_time;
-        _callbacks.emplace(std::move(callback), fire_time);
+        _callbacks.emplace(_callbacks_counter++, std::move(callback), fire_time);
     }
 
     if (notify)
